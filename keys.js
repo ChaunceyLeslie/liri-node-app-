@@ -1,3 +1,5 @@
+// looks like you could delete most of this code since the only thing being used
+// from here in your other file is the twitterKeys object in the middle.
 
  	var MovieName = process.argv[2];
  	if (MovieName === undefined ) { MovieName = "Mr. NoBody" }

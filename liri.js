@@ -1,10 +1,18 @@
 //Grab data from keys.js
+// you're importing your keys file twice which is redundant, so you
+// can delete this first one and only keep twitterKeys below
+// since that's the variable you end up using.
 var keys = require('./keys.js');
 var request = require('request');
+// Since the twitter package is actually a constructor you generally
+// want to capitalize the name of the variable you assign it to.
 var twitter = require('twitter');
 var Spotify = require('node-spotify-api');
 //var client = new twitter(keys.twitterKeys);
 var twitterKeys = require('./keys.js');
+// since twitterKeys has the exact key values you want to pass to 
+// the twitter client, you could simply instantiate the client like so:
+// var client = new twitter( twitterKeys )
 var client = new twitter({
   consumer_key: twitterKeys.consumer_key,
   consumer_secret: twitterKeys.consumer_secret,
@@ -17,6 +25,11 @@ var fs = require('fs');
 var nodeArgv = process.argv;
 var command = process.argv[2];
 //movie or song
+// A slightly more concise way of building up x would be:
+// var x = process.argv.slice(3).join(' ')
+// check out the docs for slice and join
+// --> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice
+// --> https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join
 var x = "";
 //attaches multiple word arguments
 for (var i=3; i<nodeArgv.length; i++){
@@ -36,6 +49,10 @@ switch(command){
 
   case "spotify-this-song":
     console.log('case: spotify-this-song');
+    // another way of setting a fallback value for x would be to use 
+    // the or `||` operator like so:
+    // x = x || "Fluorescent Adolescent"
+    // then you could just invoke spotifySong with x 
     if(x){
       spotifySong(x);
     } else{
@@ -61,9 +78,11 @@ switch(command){
     break;
 
   default:
+    // Nice job defining a default case for your switch statement - it's a very good habit to get into.
     console.log("{Please enter a command: my-tweets, spotify-this-song, movie-this, do-what-it-says}");
     break;
 }
+// You've already defined twitterKeys at the top of this file, so this declaration can safely be removed
   var twitterKeys = {
   consumer_key: '4EVAnqz8X8UYZAtBwZ3wiiiFj',
   consumer_secret: 'Jj68XufBnAKu0NNModrmeTzvrzvfB6bVorPUVSgihSlFEkCcju',
@@ -160,6 +179,7 @@ function omdbData(movie){
     if(movie === "Mr. Nobody"){
       console.log("-----------------------");
       console.log("If you haven't watched 'Mr. Nobody,' then you should: http://www.imdb.com/title/tt0485947/");
+      // I'll be sure to add it to my watchlist!
       console.log("It's on Netflix!");
 
       //adds text to log.txt
@@ -174,6 +194,12 @@ function omdbData(movie){
 function doThing(){
   fs.readFile('random.txt', "utf8", function(error, data){
     var txt = data.split(',');
+
+    // In theory, random.txt could have a command other than spotify-this-song
+    // so a better approach would be to rerun the switch statement towards the
+    // beginning of this file. You could either copy and paste it or a
+    // more DRY approach would be to put it in a function that you could
+    // easily and conveniently reuse 🤓
 
     spotifySong(txt[1]);
   });
